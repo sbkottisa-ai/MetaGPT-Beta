@@ -8,6 +8,7 @@ on:
 
 jobs:
   scan-pr:
+    if: github.event_name == 'pull_request'
     name: Endor OSS Pro Scan (PR)
     permissions:
       security-events: write   # For SARIF if ever needed
@@ -46,6 +47,7 @@ jobs:
           tags: "actor=${{ github.actor }},run-id=${{ github.run_id }}"
 
   scan-main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Endor OSS Pro Scan (main branch)
     permissions:
       id-token: write
