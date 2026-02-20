@@ -1,0 +1,25 @@
+# 1) OS PACKAGE VULNERABILITIES: 
+# Using an old version of Debian (Buster) which contains many unpatched CVEs 
+# in system libraries like glibc, openssl, and zlib.
+FROM python:3.8-slim-buster
+
+WORKDIR /app
+
+# 2) PROGRAMMING LANGUAGE PACKAGES:
+# Copying a requirements file that contains pinned, insecure versions.
+COPY requirements.txt .
+
+# 3) LIBRARIES AND DEPENDENCIES:
+# Installing vulnerable OS-level libraries manually to simulate runtime dependencies.
+# 'libssl1.1' and 'wget' on older distros often have known exploits.
+RUN apt-get update && apt-get install -y \
+    wget \
+    libssl1.1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the insecure python packages
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "app.py"]
